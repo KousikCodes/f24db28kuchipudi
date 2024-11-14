@@ -1,8 +1,14 @@
 const HeritageSite = require('../models/heritageSite');
 
 // List of all Heritage Sites
-exports.heritageSite_list = function(req, res) {
-  res.send('NOT IMPLEMENTED: HeritageSite list');
+exports.heritageSite_list = async function(req, res) {
+    try {
+        const heritageSites = await HeritageSite.find(); // Fetches all documents in the heritage site collection
+        res.send(heritageSites); // Sends the list as JSON
+    } catch (err) {
+        res.status(500);
+        res.send({ "error": err.message }); // Sends an error response if any issues occur
+    }
 };
 
 // For a specific Heritage Site
