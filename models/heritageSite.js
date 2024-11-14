@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
 
 const heritageSiteSchema = new mongoose.Schema({
-  name: String,
+  site_name: String,
   location: String,
-  description: String,
   year_established: Number
 });
 

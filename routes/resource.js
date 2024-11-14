@@ -4,7 +4,7 @@ module.exports = router;
 
 // Require controller modules
 const api_controller = require('../controllers/api');
-const heritageSite_controller = require('../controllers/heritageSite');
+const heritageSite_controller = require('../controllers/heritagesite');
 
 /// API ROUTE ///
 // GET resources base

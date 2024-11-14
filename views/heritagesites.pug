@@ -2,16 +2,7 @@ extends layout
 
 block content
   h1= title
-  - let results = [{ site_name: "Great Wall of China", location: "China", year_established: 1987 }, { site_name: "Machu Picchu", location: "Peru", year_established: 1983 }, { site_name: "Pyramids of Giza", location: "Egypt", year_established: 1979 }];
-  .container-fluid
-    .row
-      each site, index in results
-        div(class="col-sm-2" onclick=`buy(${index})`)
-          h3 #{site.site_name}
-          p Location: #{site.location}
-          p Established: #{site.year_established}
-  // Add JavaScript to handle the buy function
-  script.
-    function buy(itemNum) {
-      alert(`You purchased item ${itemNum + 1}`);
-    }
+  each site in results
+    h3 Name: #{site.site_name}
+    li Location: #{site.location}
+    li Established: #{site.year_established}
