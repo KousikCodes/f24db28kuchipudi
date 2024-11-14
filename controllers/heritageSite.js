@@ -10,7 +10,7 @@ exports.heritageSite_list = async function (req, res) {
     }
 };
 
-// In heritageSite_controller.js (or your controller file)
+
 exports.heritageSite_view_all_Page = async function (req, res) {
     try {
         results = await HeritageSite.find();  // Fetch all heritage sites from the DB
@@ -23,18 +23,25 @@ exports.heritageSite_view_all_Page = async function (req, res) {
 
 
 // For a specific Heritage Site
-exports.heritageSite_detail = function (req, res) {
-    res.send('NOT IMPLEMENTED: HeritageSite detail: ' + req.params.id);
+exports.heritageSite_detail = async function(req, res) {
+    console.log("Detail of Heritage Site with ID:", req.params.id);
+    try {
+        const result = await HeritageSite.findById(req.params.id);
+        if (!result) {
+            res.status(404).send(`{"error": "Heritage Site document for ID ${req.params.id} not found"}`);
+        } else {
+            res.send(result);
+        }
+    } catch (error) {
+        res.status(500).send(`{"error": "Error retrieving document for ID ${req.params.id}: ${error.message}"}`);
+    }
 };
+
 
 // Handle Heritage Site create on POST
 exports.heritageSite_create_post = async function (req, res) {
     console.log(req.body)
     let document = new HeritageSite();
-    // We are looking for a body, since POST does not have query parameters.
-    // Even though bodies can be in many different formats, we will be picky
-    // and require that it be a json object
-    // {"costume_type":"goat", "cost":12, "size":"large"}
     document.site_name = req.body.site_name;
     document.location = req.body.location;
     document.year_established = req.body.year_established;

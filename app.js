@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose');
 const connectionString = process.env.MONGO_CON;
-mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(connectionString);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
@@ -23,7 +23,7 @@ var gridRouter = require('./routes/grid');
 var pickRouter = require('./routes/pick');
 const HeritageSite = require('./models/heritageSite');
 const resourceRouter = require('./routes/resource');
-var heritageSitesRouter = require('./routes/heritageSites');  
+var heritageSitesRouter = require('./routes/heritagesites');  
  
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
