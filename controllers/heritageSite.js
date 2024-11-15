@@ -57,11 +57,41 @@ exports.heritageSite_create_post = async function (req, res) {
 
 
 // Handle Heritage Site delete on DELETE
-exports.heritageSite_delete = function (req, res) {
-    res.send('NOT IMPLEMENTED: HeritageSite delete DELETE ' + req.params.id);
+// DELETE request to delete Heritage Site
+exports.heritageSite_delete = async function(req, res) {
+    console.log("Deleting Heritage Site with ID:", req.params.id);
+    try {
+        const result = await HeritageSite.findByIdAndDelete(req.params.id);
+        if (!result) {
+            res.status(404).send(`{"error": "Heritage Site document for ID ${req.params.id} not found"}`);
+        } else {
+            res.send(`{"message": "Heritage Site document with ID ${req.params.id} deleted successfully"}`);
+        }
+    } catch (error) {
+        res.status(500).send(`{"error": "Error deleting document for ID ${req.params.id}: ${error.message}"}`);
+    }
 };
 
-// Handle Heritage Site update on PUT
-exports.heritageSite_update_put = function (req, res) {
-    res.send('NOT IMPLEMENTED: HeritageSite update PUT ' + req.params.id);
+
+// Handle Heritage Site update form on PUT.
+exports.heritageSite_update_put = async function(req, res) {
+    console.log(`Updating Heritage Site with ID: ${req.params.id} and data: ${JSON.stringify(req.body)}`);
+    try {
+        let toUpdate = await HeritageSite.findById(req.params.id);
+        
+        // Update fields if they are present in the request body
+        if (req.body.site_name) toUpdate.site_name = req.body.site_name;
+        if (req.body.location) toUpdate.location = req.body.location;
+        if (req.body.year_established) toUpdate.year_established = req.body.year_established;
+
+        // Checkbox example: converting undefined to false if unchecked
+        toUpdate.is_famous = req.body.checkbox_famous ? true : false;
+
+        let result = await toUpdate.save();
+        console.log("Update successful:", result);
+        res.send(result);
+    } catch (err) {
+        console.error("Error updating document:", err);
+        res.status(500).send(`{"error": "Update for ID ${req.params.id} failed: ${err.message}"}`);
+    }
 };
