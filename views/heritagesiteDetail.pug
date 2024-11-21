@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  h1= title
+  - let siteId = toShow._id
+  - let siteName = toShow.site_name
+  - let siteLocation = toShow.location
+  - let yearEstablished = toShow.year_established
+
+  div
+    div.row
+      div(class='siteAttr mr-3') Site ID is:
+      div #{siteId}
+    div.row
+      div(class='siteAttr mr-3') Site Name is:
+      div #{siteName}
+    div.row
+      div(class='siteAttr mr-3') Location is:
+      div #{siteLocation}
+    div.row
+      div(class='siteAttr mr-3') Year Established is:
+      div #{yearEstablished}

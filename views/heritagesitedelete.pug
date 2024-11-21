@@ -1,0 +1,46 @@
+extends layout
+
+block content
+  h1= title
+  if (toShow == null)
+    h2 No instance to delete
+  else
+    - let siteid = toShow._id
+    - let site_name = toShow.site_name
+    - let location = toShow.location
+    - let year_established = toShow.year_established
+    - let actionid = "/resource/heritageSites/" + siteid
+    script let actionid = "#{actionid}"
+    div
+      div.row
+        div(class='heritageAttr mr-3') Heritage Site ID is:
+        div #{siteid}
+      div.row
+        div(class='heritageAttr mr-3') Heritage Site Name is:
+        div #{site_name}
+      div.row
+        div(class='heritageAttr mr-3') Location is:
+        div #{location}
+      div.row
+        div(class='heritageAttr mr-3') Year Established is:
+        div #{year_established}
+    button(class="btn btn-danger m-2" onclick="deleteOnid()") Delete
+    button(class="btn btn-secondary m-2" onclick="cancel()") Cancel
+  script.
+      function cancel() {
+        window.location.href = '/heritageSites';
+        }
+  script.
+    function deleteOnid() {
+      console.log("Starting delete");
+      fetch(actionid, {
+        method: 'DELETE'
+        }).then((resp) => {
+        return resp.json();
+        }).then((body) => {
+        alert("Delete succeeded");
+        window.location.href = '/heritageSites';
+        }).catch((error) => {
+        alert("Delete failed: " + error);
+      });
+    }

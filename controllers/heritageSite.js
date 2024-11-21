@@ -55,10 +55,21 @@ exports.heritageSite_create_post = async function (req, res) {
     }
 };
 
+// Handle building the view for deleting a heritage site.
+// Query provides the ID
+exports.heritageSite_delete_Page = async function (req, res) {
+    console.log("Delete view for heritage site with ID " + req.query.id);
+    try {
+        let result = await HeritageSite.findById(req.query.id); // Find the site by ID
+        res.render('heritagesitedelete', { title: 'Heritage Site Delete', toShow: result });
+    } catch (err) {
+        console.error(err); // Log any error
+        res.status(500).send(`{'error': '${err}'}`);
+    }
+};
 
 // Handle Heritage Site delete on DELETE
-// Handle Heritage Site delete on DELETE
-exports.heritageSite_delete = async function(req, res) {
+exports.heritageSite_delete = async function (req, res) {
     console.log("Deleting Heritage Site with ID:", req.params.id);
     try {
         const result = await HeritageSite.findByIdAndDelete(req.params.id);
@@ -96,5 +107,46 @@ exports.heritageSite_update_put = async function (req, res) {
     } catch (err) {
         console.error("Error updating document:", err);
         res.status(500).send(`{"error": "Update for ID ${req.params.id} failed: ${err.message}"}`);
+    }
+};
+
+// Handle displaying one Heritage Site by ID
+exports.heritageSite_view_one_Page = async function (req, res) {
+    console.log("Single view for ID:", req.query.id);
+    try {
+        const result = await HeritageSite.findById(req.query.id);
+        if (!result) {
+            res.status(404).send(`{"error": "Heritage Site with ID ${req.query.id} not found"}`);
+        } else {
+            res.render('heritagesiteDetail', {
+                title: 'Heritage Site Detail',
+                toShow: result
+            });
+        }
+    } catch (err) {
+        res.status(500).send(`{'error': '${err}'}`);
+    }
+};
+
+// Handle building the view for creating a heritage site
+exports.heritageSite_create_Page = function (req, res) {
+    console.log("create view");
+    try {
+        res.render('heritagesitecreate', { title: 'Heritage Site Create' });
+    } catch (err) {
+        res.status(500);
+        res.send(`{'error': '${err}'}`);
+    }
+};
+
+// Handle building the view for updating a heritage site.
+// Query provides the id.
+exports.heritageSite_update_Page = async function(req, res) {
+    console.log("Update view for heritage site with ID " + req.query.id);
+    try {
+        let result = await HeritageSite.findById(req.query.id);
+        res.render('heritagesiteupdate', { title: 'Heritage Site Update', toShow: result });
+    } catch (err) {
+        res.status(500).send(`{"error": "${err}"}`);
     }
 };
