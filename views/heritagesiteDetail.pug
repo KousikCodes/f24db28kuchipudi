@@ -1,22 +1,32 @@
 extends layout
 
 block content
-  h1= title
-  - let siteId = toShow._id
-  - let siteName = toShow.site_name
-  - let siteLocation = toShow.location
-  - let yearEstablished = toShow.year_established
+  h1.text-center.text-primary.mt-3= title
 
-  div
-    div.row
-      div(class='siteAttr mr-3') Site ID is:
-      div #{siteId}
-    div.row
-      div(class='siteAttr mr-3') Site Name is:
-      div #{siteName}
-    div.row
-      div(class='siteAttr mr-3') Location is:
-      div #{siteLocation}
-    div.row
-      div(class='siteAttr mr-3') Year Established is:
-      div #{yearEstablished}
+  if (toShow == null)
+    h2.text-center.text-muted No details available for this heritage site
+  else
+    - let siteId = toShow._id
+    - let siteName = toShow.site_name
+    - let siteLocation = toShow.location
+    - let yearEstablished = toShow.year_established
+
+    div.container.mt-4
+      div.card.shadow
+        div.card-header.bg-info.text-white
+          h3 Heritage Site Details
+        div.card-body
+          div.mb-3
+            strong Site ID:
+            span.ml-2 #{siteId}
+          div.mb-3
+            strong Site Name:
+            span.ml-2 #{siteName}
+          div.mb-3
+            strong Location:
+            span.ml-2 #{siteLocation}
+          div.mb-3
+            strong Year Established:
+            span.ml-2 #{yearEstablished}
+        div.card-footer.text-center
+          a.btn.btn-secondary(href='/heritageSites') Back to List
