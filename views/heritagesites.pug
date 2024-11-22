@@ -3,6 +3,15 @@ extends layout
 block content
   h1= title
   each site in results
-    h3 Name: #{site.site_name}
-    li Location: #{site.location}
-    li Established: #{site.year_established}
+    div(class="card my-3 p-3 border")
+      h3 Name: #{site.site_name}
+      ul
+        li Location: #{site.location}
+        li Established: #{site.year_established}
+      // Define the button with an `onclick` event to navigate to the update page
+      button.btn.btn-primary.mt-2(onclick=`navigateToUpdate('${site._id}')`) Update
+  // Add a script to handle the navigation
+  script.
+    function navigateToUpdate(siteId) {
+      window.location.href = `/resource/update?id=${siteId}`;
+    }

@@ -1,32 +1,33 @@
 extends layout
 
 block content
-  h1.text-center.text-primary.mt-3= title
+  h1.text-center.text-dark.mt-5.font-weight-bold= title
 
   if (toShow == null)
-    h2.text-center.text-muted No details available for this heritage site
+    h2.text-center.text-muted.mt-3 No details available for this heritage site
   else
     - let siteId = toShow._id
     - let siteName = toShow.site_name
     - let siteLocation = toShow.location
     - let yearEstablished = toShow.year_established
 
-    div.container.mt-4
-      div.card.shadow
-        div.card-header.bg-info.text-white
-          h3 Heritage Site Details
+    div.container.mt-5
+      div.card.shadow-lg.border-success
+        div.card-header.bg-success.text-white
+          h3.text-center Heritage Site Details
         div.card-body
-          div.mb-3
-            strong Site ID:
-            span.ml-2 #{siteId}
-          div.mb-3
-            strong Site Name:
-            span.ml-2 #{siteName}
-          div.mb-3
-            strong Location:
-            span.ml-2 #{siteLocation}
-          div.mb-3
-            strong Year Established:
-            span.ml-2 #{yearEstablished}
+          div.row
+            div.col-md-6.mb-3
+              strong Site ID:
+              p.text-muted #{siteId}
+            div.col-md-6.mb-3
+              strong Site Name:
+              p.text-muted #{siteName}
+            div.col-md-6.mb-3
+              strong Location:
+              p.text-muted #{siteLocation}
+            div.col-md-6.mb-3
+              strong Year Established:
+              p.text-muted #{yearEstablished}
         div.card-footer.text-center
-          a.btn.btn-secondary(href='/heritageSites') Back to List
+          a.btn.btn-outline-success.btn-lg(href='/heritageSites') Back to List
