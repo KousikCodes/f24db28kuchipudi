@@ -2,16 +2,33 @@ extends layout
 
 block content
   h1= title
+  // Loop through the sites in the collection
   each site in results
     div(class="card my-3 p-3 border")
       h3 Name: #{site.site_name}
       ul
         li Location: #{site.location}
         li Established: #{site.year_established}
-      // Define the button with an `onclick` event to navigate to the update page
+
+      // Button to navigate to the update page
       button.btn.btn-primary.mt-2(onclick=`navigateToUpdate('${site._id}')`) Update
+
+      // Button to navigate to the detail view
+      button.btn.btn-info.mt-2(onclick=`navigateToDetails('${site._id}')`) View Details
+
+      // Button to navigate to the delete view
+      button.btn.btn-danger.mt-2(onclick=`navigateToDelete('${site._id}')`) Delete
+
   // Add a script to handle the navigation
   script.
     function navigateToUpdate(siteId) {
-      window.location.href = `/resource/update?id=${siteId}`;
+      window.location.href = `/resource/update?id=${siteId}`;;
+    }
+
+    function navigateToDetails(siteId) {
+      window.location.href = `/resource/heritagesites/detail?id=${siteId}`;
+    }
+
+    function navigateToDelete(siteId) {
+      window.location.href = `/heritagesites/delete?id=${siteId}`;
     }

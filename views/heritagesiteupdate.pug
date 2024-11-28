@@ -7,6 +7,10 @@ block content
     - let location = toShow.location
     - let year = toShow.year_established
 
+    // Display error message if there's one
+    if message
+        div.alert.alert-danger= message
+
     div.row(class='mb-2')
         div.mr-1 ID is:
         div #{siteid}
@@ -29,10 +33,10 @@ block content
         input(type="submit")
 
     // Client-side script to intercept form submission
-    script.
+    //script.
         document.forms['HeritageSiteForm'].addEventListener('submit', (event) => {
             event.preventDefault();
-            // Show user that form is being submitted
+            / Show user that form is being submitted
             fetch(event.target.action, {
                 method: 'PUT',
                 body: new URLSearchParams(new FormData(event.target)) // Form data
@@ -40,9 +44,32 @@ block content
                 return resp.json(); // Expecting a JSON response
             }).then((body) => {
                 alert("Update succeeded");
-                // Optionally handle response body
+                / Optionally handle response body
             }).catch((error) => {
                 alert("Update failed " + error);
-                // Handle error
+                / Handle error
             });
+        });*/
+    script.
+      document.forms['HeritageSiteForm'].addEventListener('submit', (event) => {
+        event.preventDefault();
+        // Show user that form is being submitted
+        fetch(event.target.action, {
+            method: 'PUT',
+            body: new URLSearchParams(new FormData(event.target)) // Form data
+        }).then((resp) => {
+            return resp.json(); // Expecting a JSON response
+        }).then((body) => {
+            // Check if the response contains an error message
+            if (body.error) {
+                alert("Update failed: " + body.error); // Show the error message
+            } else {
+                alert("Update succeeded");
+                // Optionally handle successful update, such as redirecting or updating the page
+            }
+        }).catch((error) => {
+            alert("Update failed: " + error); // Show any network errors
         });
+      });
+
+        

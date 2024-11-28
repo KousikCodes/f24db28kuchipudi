@@ -1,47 +1,90 @@
 var express = require('express');
-var router = express.Router();
-
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
 var passport = require('passport');
-var Account = require('../models/account');
+var router = express.Router();
+var Account = require('../models/account'); // Assuming `account.js` is in the `models` folder
 
-// Register
-router.get('/register', (req, res) => {
-  res.render('register', { title: 'Register' });
+// Homepage
+router.get('/', function (req, res) {
+    res.render('index', { 
+        title: 'Heritage Sites App', 
+        user: req.user 
+    });
 });
 
-router.post('/register', (req, res) => {
-  Account.register(new Account({ username: req.body.username }), req.body.password, (err) => {
-    if (err) {
-      return res.render('register', { title: 'Register', error: err.message });
-    }
-    res.redirect('/login');
-  });
+// Registration Page
+router.get('/register', function (req, res) {
+    res.render('register', { 
+        title: 'Register for Heritage Sites', 
+        message: '' 
+    });
 });
 
-// Login
-router.get('/login', (req, res) => {
-  res.render('login', { title: 'Login' });
+// Handle Registration
+router.post('/register', function (req, res) {
+    Account.findOne({ username: req.body.username })
+        .then(function (user) {
+            if (user != null) {
+                console.log("User already exists: " + req.body.username);
+                return res.render('register', { 
+                    title: 'Register for Heritage Sites', 
+                    message: 'User already exists', 
+                    account: req.body.username 
+                });
+            }
+            let newAccount = new Account({ username: req.body.username });
+            Account.register(newAccount, req.body.password, function (err, user) {
+                if (err) {
+                    console.log("Error registering user: " + err);
+                    return res.render('register', { 
+                        title: 'Register for Heritage Sites', 
+                        message: 'Registration error', 
+                        account: req.body.username 
+                    });
+                }
+                console.log('Registration successful');
+                res.redirect('/');
+            });
+        })
+        .catch(function (err) {
+            console.error("Error during registration: " + err);
+            res.render('register', { 
+                title: 'Register for Heritage Sites', 
+                message: 'Unexpected error occurred', 
+                account: req.body.username 
+            });
+        });
 });
 
+// Login Page
+router.get('/login', function (req, res) {
+    res.render('login', { 
+        title: 'Login to Heritage Sites', 
+        message: '', 
+        user: req.user 
+    });
+});
+
+// Handle Login
 router.post('/login', passport.authenticate('local', {
-  successRedirect: '/heritageSites',
-  failureRedirect: '/login',
-  failureFlash: true
-}));
+    failureRedirect: '/login',
+    failureMessage: 'Invalid username or password',
+}), function (req, res) {
+    res.redirect('/');
+});
 
 // Logout
-router.get('/logout', (req, res) => {
-  req.logout(err => {
-    if (err) {
-      return next(err);
-    }
-    res.redirect('/');
-  });
+router.get('/logout', function (req, res, next) {
+    req.logout(function (err) {
+        if (err) {
+            return next(err);
+        }
+        res.redirect('/');
+    });
+});
+
+// Ping (for testing connectivity)
+router.get('/ping', function (req, res) {
+    res.status(200).send("pong!");
 });
 
 module.exports = router;

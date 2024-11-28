@@ -110,6 +110,31 @@ exports.heritageSite_update_put = async function (req, res) {
     }
 };
 
+exports.heritageSite_update_post = async function(req, res) {
+    try {
+        // Try updating the heritage site
+        const updatedSite = await HeritageSite.findByIdAndUpdate(req.body.id, req.body, { new: true, runValidators: true });
+
+        if (!updatedSite) {
+            return res.status(404).json({ error: 'Heritage site not found' });
+        }
+
+        // Return a success message if the update is successful
+        res.status(200).json({ message: 'Update succeeded', updatedSite });
+    } catch (err) {
+        // Check if the error is a validation error
+        if (err.name === 'ValidationError') {
+            // Send back the validation error details to the client
+            return res.status(400).json({ error: `Validation failed: ${err.message}` });
+        }
+
+        // Handle other types of errors
+        res.status(500).json({ error: `Internal server error: ${err.message}` });
+    }
+};
+
+
+
 // Handle displaying one Heritage Site by ID
 exports.heritageSite_view_one_Page = async function (req, res) {
     console.log("Single view for ID:", req.query.id);
@@ -147,6 +172,16 @@ exports.heritageSite_update_Page = async function(req, res) {
         let result = await HeritageSite.findById(req.query.id);
         res.render('heritagesiteupdate', { title: 'Heritage Site Update', toShow: result });
     } catch (err) {
-        res.status(500).send(`{"error": "${err}"}`);
+        if (err.name === 'ValidationError') {
+            // If it's a validation error, render the page with the error message
+            res.render('heritagesiteupdate', {
+                title: 'Heritage Site Update',
+                message: `Error: ${err.message}`,
+                toShow: req.body // Preserve any previously entered data in the form
+            });
+        } else {
+            // Handle other types of errors
+            res.status(500).send(`{"error": "${err}"}`);
+        }
     }
 };
