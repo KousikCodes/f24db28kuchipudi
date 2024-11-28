@@ -21,8 +21,9 @@ router.post('/heritageSites', heritageSiteController.heritageSite_create_post);
 router.get('/heritageSites', heritageSiteController.heritageSite_list);
 router.get('/heritageSites/all', heritageSiteController.heritageSite_view_all_Page);
 /* GET create heritage site page */
-router.get('/heritageSites/create', heritageSiteController.heritageSite_create_Page);
-
+router.get('/heritageSites/create',secured, heritageSiteController.heritageSite_create_Page);
+/* GET delete heritage site page */
+router.get('/heritageSites/delete',secured, heritageSiteController.heritageSite_delete_Page);
 // GET detail page for a specific Heritage Site (using query parameter)
 router.get('/heritageSites/detail', heritageSiteController.heritageSite_view_one_Page);
 /* GET update page for heritage site */

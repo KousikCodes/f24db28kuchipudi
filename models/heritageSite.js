@@ -4,6 +4,8 @@ const HeritageSiteSchema = new mongoose.Schema({
     site_name: {
         type: String,
         required: [true, 'Site name is required'],
+        minlength: [3, 'Site name must be at least 3 characters long'],  // Minimum length for name
+        maxlength: [100, 'Site name cannot exceed 100 characters'],  // Maximum length for name
     },
     location: {
         type: String,
