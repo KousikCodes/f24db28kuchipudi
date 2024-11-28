@@ -57,31 +57,41 @@ exports.heritageSite_create_post = async function (req, res) {
 
 // Handle building the view for deleting a heritage site.
 // Query provides the ID
+// Render the delete view for a heritage site
 exports.heritageSite_delete_Page = async function (req, res) {
-    console.log("Delete view for heritage site with ID " + req.query.id);
     try {
-        let result = await HeritageSite.findById(req.query.id); // Find the site by ID
-        res.render('heritagesitedelete', { title: 'Heritage Site Delete', toShow: result });
+        // Find the heritage site by ID
+        const site = await HeritageSite.findById(req.query.id);
+
+        if (!site) {
+            return res.status(404).json({ error: `Heritage site with ID ${req.query.id} not found` });
+        }
+
+        // Render the delete page with the heritage site data
+        res.status(200).render('heritagesitedelete', { title: 'Heritage Site Delete', toShow: site });
     } catch (err) {
-        console.error(err); // Log any error
-        res.status(500).send(`{'error': '${err}'}`);
+        // Handle errors, send a 500 error response if there is an issue
+        console.error(err);
+        res.status(500).json({ error: `Error fetching heritage site: ${err.message}` });
     }
 };
 
-// Handle Heritage Site delete on DELETE
+// Handle the deletion of a heritage site
 exports.heritageSite_delete = async function (req, res) {
-    console.log("Deleting Heritage Site with ID:", req.params.id);
     try {
+        // Delete the heritage site by ID
         const result = await HeritageSite.findByIdAndDelete(req.params.id);
+
         if (!result) {
-            res.status(404).send(`{"error": "Heritage Site document for ID ${req.params.id} not found"}`);
-        } else {
-            console.log("Removed:", result);
-            res.send(`{"message": "Heritage Site document with ID ${req.params.id} deleted successfully"}`);
+            return res.status(404).json({ error: `Heritage site with ID ${req.params.id} not found` });
         }
+
+        // Send a success message if the deletion is successful
+        res.status(200).json({ message: `Heritage site with ID ${req.params.id} deleted successfully` });
     } catch (err) {
-        console.error("Error deleting document:", err);
-        res.status(500).send(`{"error": "Error deleting document for ID ${req.params.id}: ${err.message}"}`);
+        // Handle errors during deletion
+        console.error("Error deleting site:", err);
+        res.status(500).json({ error: `Error deleting heritage site: ${err.message}` });
     }
 };
 
